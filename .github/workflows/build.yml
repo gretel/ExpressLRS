@@ -4,14 +4,22 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Set up Python
       uses: actions/setup-python@v1
     - name: Install PlatformIO
       run: |
         python -m pip install --upgrade pip
         pip install platformio
+    - name: Cache Build
+      id: cache-build
+      uses: actions/cache@v1
+      with:
+        path: ~/.cache
+        key: ${{ runner.os }}-build
     - name: Run PlatformIO
+      env:
+        PLATFORMIO_CACHE_DIR: ~/.cache
       run: |
         cd src
         platformio run
